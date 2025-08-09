@@ -1,0 +1,148 @@
+<div class="p-6 max-w-5xl mx-auto">
+  <!-- Entête avec titre et bouton "Ajouter un étudiant" en dégradé violet -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-semibold text-gray-800">Liste des étudiants</h2>
+    <button
+      (click)="ouvrirModal(false)"
+      class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50"
+    >
+      <svg 
+        class="w-5 h-5 text-white" 
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"
+      >
+        <path d="M12 4v16m8-8H4" />
+      </svg>
+      <span class="text-white">Ajouter un étudiant</span>
+    </button>
+  </div>
+
+  <!-- Table stylisée -->
+  <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Matricule</th>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Nom</th>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Prénom</th>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Téléphone</th>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Adresse</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let etudiant of etudiants" class="hover:bg-gray-50 transition">
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ etudiant.matricule }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ etudiant.nom }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ etudiant.prenom }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ etudiant.telephone }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ etudiant.adresse }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-800 space-x-2">
+            <!-- Bouton Modifier -->
+            <button 
+              (click)="ouvrirModal(true, etudiant)"
+              class="inline-flex items-center p-2 text-blue-600 rounded hover:bg-blue-50 hover:text-blue-800 transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+              title="Modifier"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M16.5 3.5a2.121 2.121 0 113 3L12 14l-4 1 1-4 7.5-7.5z" />
+              </svg>
+            </button>
+            <!-- Bouton Supprimer -->
+            <button 
+              (click)="supprimer(etudiant.id!)" 
+              class="inline-flex items-center p-2 text-red-600 rounded hover:bg-red-50 hover:text-red-800 transition focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
+              title="Supprimer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 7L5 7M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M10 11v6M14 11v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal d'ajout/modification -->
+  <div id="etudiantModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="modal-content bg-white rounded-xl w-full max-w-lg p-8 shadow-lg relative">
+      <h3 class="text-2xl font-bold mb-6 text-gray-900">
+        {{ modeModification ? 'Modifier' : 'Ajouter' }} un étudiant
+      </h3>
+      <form [formGroup]="etudiantForm" (ngSubmit)="onSubmit()" class="space-y-5">
+        <input 
+          type="text" 
+          placeholder="Matricule" 
+          formControlName="matricule"
+          class="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+        />
+        
+        <div>
+          <input 
+            type="text" 
+            placeholder="Nom *" 
+            formControlName="nom"
+            required
+            class="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          />
+          <div *ngIf="etudiantForm.controls['nom'].touched && etudiantForm.controls['nom'].invalid" class="text-red-600 text-sm mt-1">Nom requis</div>
+        </div>
+
+        <div>
+          <input 
+            type="text" 
+            placeholder="Prénom *" 
+            formControlName="prenom"
+            required
+            class="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          />
+          <div *ngIf="etudiantForm.controls['prenom'].touched && etudiantForm.controls['prenom'].invalid" class="text-red-600 text-sm mt-1">Prénom requis</div>
+        </div>
+
+        <input 
+          type="text" 
+          placeholder="Téléphone" 
+          formControlName="telephone"
+          class="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+        />
+        <input 
+          type="text" 
+          placeholder="Adresse" 
+          formControlName="adresse"
+          class="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+        />
+
+        <div>
+          <select 
+            formControlName="classeId" 
+            required
+            class="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          >
+            <option value="" disabled>-- Sélectionner une classe --</option>
+            <option *ngFor="let classe of classes" [value]="classe.id">{{ classe.libelle }}</option>
+          </select>
+          <div *ngIf="etudiantForm.controls['classeId'].touched && etudiantForm.controls['classeId'].invalid" class="text-red-600 text-sm mt-1">Classe requise</div>
+        </div>
+
+        <div class="flex justify-end space-x-4 pt-6">
+          <button 
+            type="submit" 
+            [disabled]="etudiantForm.invalid"
+            [ngClass]="modeModification ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'"
+            class="text-white font-semibold px-6 py-3 rounded-md shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-opacity-50"
+          >
+            {{ modeModification ? 'Modifier' : 'Ajouter' }}
+          </button>
+          <button 
+            type="button" 
+            (click)="fermerModal()"
+            class="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-6 py-3 rounded-md shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-opacity-50"
+          >
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

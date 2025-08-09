@@ -1,0 +1,62 @@
+<nav class="fixed top-0 left-0 h-full w-48 bg-gradient-to-b from-indigo-600 to-purple-700 shadow-lg z-50 flex flex-col py-8 px-4">
+  <!-- Logo/Brand -->
+  <a routerLink="/" class="mb-12 flex flex-col items-center space-y-1 text-white hover:text-indigo-200 transition-colors duration-200">
+    <div class="bg-white bg-opacity-20 p-2 rounded-lg backdrop-blur-sm">
+      <!-- Livre stylisé SVG -->
+      <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 4v15.5M20 6v13M20.42 6a2.5 2.5 0 00-.92 2M7.5 6v13" />
+      </svg>
+    </div>
+    <span class="text-xl font-bold">DoxalDaaraJi</span>
+    <span class="text-xs font-light text-indigo-200">Doxal Daara</span>
+  </a>
+
+  <!-- Navigation Links -->
+  <nav class="flex flex-col space-y-4 text-indigo-100 font-medium text-base">
+    <a 
+      routerLink="/"
+      routerLinkActive="bg-white bg-opacity-20 text-white shadow-md"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:bg-opacity-20 hover:text-white transition duration-200 backdrop-blur-sm"
+    >
+      <!-- Maison SVG -->
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 12l9-9 9 9M4 10v10h16V10" />
+      </svg>
+      <span>Accueil</span>
+    </a>
+
+    <a 
+      routerLink="/classe"
+      routerLinkActive="bg-white bg-opacity-20 text-white shadow-md"
+      class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:bg-opacity-20 hover:text-white transition duration-200 backdrop-blur-sm"
+    >
+      <!-- Tableau / liste SVG -->
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="7" rx="2" ry="2" />
+        <rect x="3" y="13" width="18" height="7" rx="2" ry="2" />
+      </svg>
+      <span>Classes</span>
+    </a>
+
+    <a 
+      routerLink="/etudiant"
+      routerLinkActive="bg-white bg-opacity-20 text-white shadow-md"
+      class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:bg-opacity-20 hover:text-white transition duration-200 backdrop-blur-sm"
+    >
+      <!-- Groupe d'utilisateurs SVG -->
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="9" cy="7" r="4" />
+        <path d="M17 11v-1a4 4 0 00-3-3.87" />
+        <path d="M21 21v-2a4 4 0 00-3-3.87" />
+        <path d="M6 21v-2a4 4 0 00-3-3.87" />
+      </svg>
+      <span>Étudiants</span>
+    </a>
+  </nav>
+</nav>
+
+<!-- Contenu principal avec marge à gauche pour éviter que le menu ne cache tout -->
+<div class="ml-48 p-6">
+  <router-outlet></router-outlet>
+</div>
